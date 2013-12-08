@@ -4,7 +4,7 @@ setup(
     name='infect',
     version='0.0.1',
     url='https://github.com/thiderman/infect',
-    author='Lowe Thiderman, Anton Lazarew',
+    author='Lowe Thiderman, Anton Lazarev',
     author_email='lowe.thiderman@gmail.com, tony@lazarew.me',
     description=('dotfiles distribution management'),
     license='MIT',
