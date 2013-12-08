@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+if __name__ == "__main__":
+    import sys
+    import os
+
+    root = os.path.dirname(os.path.dirname(sys.argv[0]))
+    module = os.path.join(root, 'infect')
+
+    if os.path.isdir(module):
+        sys.path.insert(0, root)
+
+    from infect.infect import main
+    exit = main()
+    sys.exit(exit)
