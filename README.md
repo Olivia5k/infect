@@ -1,0 +1,4 @@
+infect
+======
+
+dotfiles distribution management
