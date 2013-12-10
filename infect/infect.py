@@ -19,10 +19,10 @@ class Infect(object):
     def __init__(self):
         pass
 
-    def install(self):
+    def install(self):  # pragma: nocover
         pass
 
-    def upload(self):
+    def upload(self):  # pragma: nocover
         pass
 
     def symlink(self, target, dest):
@@ -46,14 +46,14 @@ class Infect(object):
 
         return self.Codes.symlink['success']
 
-    def uninstall(self):
+    def uninstall(self):  # pragma: nocover
         pass
 
 
-def main():
+def main():  # pragma: nocover
     print('Running infect main()')
     return 0
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: nocover
     sys.exit(main())
