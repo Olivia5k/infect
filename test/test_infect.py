@@ -6,7 +6,7 @@ import tempfile
 import shutil
 import pytest
 
-from infect.infect import Infect
+from infect import infect
 
 
 class TestSymlink(object):
@@ -19,7 +19,7 @@ class TestSymlink(object):
     """
 
     def setup_method(self, method):
-        self.infect = Infect()
+        self.infect = infect.Infect()
         self.tempdir = tempfile.mkdtemp(
             prefix='infect-{0}-'.format(method.__name__)
         )
@@ -75,3 +75,12 @@ class TestSymlink(object):
         assert exc.value.errno == 17
         assert exc.value.filename == dest
         assert not os.path.islink(self.dest)
+
+
+class TestSymlinkArguments(object):
+    def setup_method(self, method):
+        self.parser = infect.setup_args()
+
+    def test_symlink_present(self):
+        ns = self.parser.parse_args(['symlink'])
+        assert ns.command == 'symlink'

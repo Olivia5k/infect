@@ -4,7 +4,7 @@
 import sys
 import os
 
-# import argparse
+import argparse
 
 
 class Infect(object):
@@ -40,9 +40,20 @@ class Infect(object):
         os.symlink(target, dest)
 
 
+def setup_args():
+    parser = argparse.ArgumentParser('infect')
+    subparsers = parser.add_subparsers(help="Core commands", dest="command")
+
+    subparsers.add_parser(
+        'symlink',
+        help='Symlink configurations for installed applications'
+    )
+    return parser
+
+
 def main():  # pragma: nocover
-    print('Running infect main()')
-    return 0
+    parser = setup_args()
+    parser.parse_args()
 
 
 if __name__ == "__main__":  # pragma: nocover
