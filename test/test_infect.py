@@ -125,3 +125,20 @@ class TestSymlink(object):
 
         assert ii.called
         sl.assert_called_once_with(self.fileroot, self.filedest)
+
+
+class TestIsInstalled(object):
+    def setup_method(self, method):
+        self.infect = infect.Infect(mock.MagicMock())
+
+    def test_app_does_not_exist(self):
+        ret = self.infect._is_installed('this_cannot_possibly_exist')
+        assert ret is None
+
+    def test_app_exists(self):
+        ret = self.infect._is_installed('yes')
+        assert ret == '/usr/bin/yes'
+
+    def test_app_absolute_path(self):
+        ret = self.infect._is_installed('/usr/bin/ls')
+        assert ret == '/usr/bin/ls'
