@@ -10,7 +10,7 @@ import mock
 from infect import infect
 
 
-class TestSymlink(object):
+class TestSymlinkInternal(object):
     """
     Test the internal infect symlinker.
 
