@@ -17,9 +17,15 @@ class Infect(object):
     def upload(self):  # pragma: nocover
         pass
 
-    def symlink(self, target, dest):
+    def uninstall(self):  # pragma: nocover
+        pass
+
+    def symlink(self):  # pragma: nocover
+        pass
+
+    def _symlink(self, target, dest):
         """
-        Symlink a file and its destination
+        Internal helper: Symlink a file and its destination
 
         Will raise OSErrors if the source is missing or if the destination
         already exists. Check the exception for the `errno` and `filename`
@@ -32,9 +38,6 @@ class Infect(object):
         if not os.path.isfile(target):
             raise OSError(2, 'target file not found', target)
         os.symlink(target, dest)
-
-    def uninstall(self):  # pragma: nocover
-        pass
 
 
 def main():  # pragma: nocover
