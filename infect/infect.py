@@ -8,8 +8,8 @@ import argparse
 
 
 class Infect(object):
-    def __init__(self):
-        pass
+    def __init__(self, ns):
+        self.ns = ns
 
     def install(self):  # pragma: nocover
         pass

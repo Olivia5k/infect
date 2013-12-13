@@ -5,6 +5,7 @@ import os
 import tempfile
 import shutil
 import pytest
+import mock
 
 from infect import infect
 
@@ -19,7 +20,7 @@ class TestSymlink(object):
     """
 
     def setup_method(self, method):
-        self.infect = infect.Infect()
+        self.infect = infect.Infect(mock.MagicMock())
         self.tempdir = tempfile.mkdtemp(
             prefix='infect-{0}-'.format(method.__name__)
         )
