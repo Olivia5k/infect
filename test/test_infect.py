@@ -103,7 +103,7 @@ class TestSymlink(object):
             'dest': self.destdir,
             'apps': {
                 'foo': {
-                    'files': [self.filename]
+                    'files': [self.filename],
                 }
             }
         }
@@ -125,6 +125,35 @@ class TestSymlink(object):
 
         assert ii.called
         sl.assert_called_once_with(self.fileroot, self.filedest)
+
+    @mock.patch.object(infect.Infect, '_is_installed')
+    @mock.patch.object(infect.Infect, '_symlink')
+    def test_app_installed_file_has_dest(self, sl, ii):
+        fake = '/test/hehe'
+        ii.return_value = True
+
+        self.infect.conf['apps']['foo']['dest'] = {
+            self.filename: fake
+        }
+        self.infect.symlink('foo')
+
+        assert ii.called
+        sl.assert_called_once_with(self.fileroot, fake)
+
+    @mock.patch.object(infect.Infect, '_is_installed')
+    @mock.patch.object(infect.Infect, '_symlink')
+    def test_app_installed_file_has_dest_with_env_variable(self, sl, ii):
+        ii.return_value = True
+
+        fake = '/home/{0}/hehe'.format(os.getenv('USER'))
+
+        self.infect.conf['apps']['foo']['dest'] = {
+            self.filename: '$HOME/hehe'
+        }
+        self.infect.symlink('foo')
+
+        assert ii.called
+        sl.assert_called_once_with(self.fileroot, fake)
 
 
 class TestIsInstalled(object):

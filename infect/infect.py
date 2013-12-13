@@ -33,8 +33,9 @@ class Infect(object):
 
                 # If the application has a dest set, use that, otherwise just
                 # use the root infect dest.
-                if 'dest' in appconf:
-                    dest = appconf['dest']
+                if 'dest' in appconf and f in appconf['dest']:
+                    dest = appconf['dest'][f]
+                    dest = os.path.expandvars(dest)  # Support env variables
                 else:
                     dest = os.path.join(self.conf['dest'], '.{0}'.format(f))
 
