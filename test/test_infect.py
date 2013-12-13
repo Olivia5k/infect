@@ -85,3 +85,43 @@ class TestSymlinkArguments(object):
     def test_symlink_present(self):
         ns = self.parser.parse_args(['symlink'])
         assert ns.command == 'symlink'
+
+
+class TestSymlink(object):
+    def setup_method(self, method):
+        self.infect = infect.Infect(mock.MagicMock())
+        self.tempdir = tempfile.mkdtemp(
+            prefix='infect-{0}-'.format(method.__name__)
+        )
+        self.destdir = tempfile.mkdtemp(dir=self.tempdir)
+        self.filename = 'foo.conf'
+        self.fileroot = os.path.join(self.tempdir, self.filename)
+        self.filedest = os.path.join(self.destdir, '.' + self.filename)
+
+        self.infect.conf = {
+            'root': self.tempdir,
+            'dest': self.destdir,
+            'apps': {
+                'foo': {
+                    'files': [self.filename]
+                }
+            }
+        }
+
+    @mock.patch.object(infect.Infect, '_is_installed')
+    @mock.patch.object(infect.Infect, '_symlink')
+    def test_app_not_installed(self, sl, ii):
+        ii.return_value = False
+        self.infect.symlink('foo')
+
+        assert ii.called
+        assert not sl.called
+
+    @mock.patch.object(infect.Infect, '_is_installed')
+    @mock.patch.object(infect.Infect, '_symlink')
+    def test_app_installed(self, sl, ii):
+        ii.return_value = True
+        self.infect.symlink('foo')
+
+        assert ii.called
+        sl.assert_called_once_with(self.fileroot, self.filedest)
