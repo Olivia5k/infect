@@ -155,6 +155,47 @@ class TestSymlink(object):
         assert ii.called
         sl.assert_called_once_with(self.fileroot, fake)
 
+    @mock.patch.object(infect.Infect, '_backup')
+    @mock.patch.object(infect.Infect, '_is_installed')
+    @mock.patch.object(infect.Infect, '_symlink')
+    def test_app_installed_dest_exists_and_is_not_a_link(self, sl, ii, bu):
+        ii.return_value = True
+
+        # Make the first call throw OSError 17 and the second one look like it
+        # completed successfully.
+        sl.side_effect = [OSError(17, '', self.filedest), None]
+
+        # Create the file real quick
+        open(self.filedest, 'w').close()
+
+        self.infect.symlink('foo')
+
+        assert ii.called
+
+        # The symlink should have been called twice, once to raise the error
+        # and once after _backup() was run.
+        sl_call = mock.call(self.fileroot, self.filedest)
+        sl.assert_has_calls([sl_call, sl_call])
+
+        # The destination should be backed up.
+        bu.assert_called_once_with(self.filedest)
+
+    @mock.patch.object(infect.Infect, '_backup')
+    @mock.patch.object(infect.Infect, '_is_installed')
+    @mock.patch.object(infect.Infect, '_symlink')
+    def test_app_installed_dest_exists_and_is_a_link(self, sl, ii, bu):
+        ii.return_value = True
+        sl.side_effect = OSError(17, '', self.filedest)
+
+        # Create the link real quick
+        os.symlink(self.fileroot, self.filedest)
+
+        self.infect.symlink('foo')
+
+        assert ii.called
+        assert not bu.called
+        sl.assert_called_once_with(self.fileroot, self.filedest)
+
 
 class TestIsInstalled(object):
     def setup_method(self, method):

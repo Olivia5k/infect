@@ -39,7 +39,18 @@ class Infect(object):
                 else:
                     dest = os.path.join(self.conf['dest'], '.{0}'.format(f))
 
-                self._symlink(src, dest)
+                try:
+                    self._symlink(src, dest)
+                except OSError as exc:
+                    if exc.errno != 17:
+                        # Some other OSError, because of reasons. Re-raise!
+                        raise  # pragma: nocover
+
+                    # Check if the destination file is already a link. If
+                    # not, back it up and re-run the symlinker.
+                    if not os.path.islink(dest):
+                        self._backup(dest)
+                        self._symlink(src, dest)
 
     def _symlink(self, target, dest):
         """
@@ -78,6 +89,9 @@ class Infect(object):
                     return exe_file
 
         return None
+
+    def _backup(self, target):  # pragma: nocover
+        pass
 
 
 def setup_args():
