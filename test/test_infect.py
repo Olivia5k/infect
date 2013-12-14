@@ -116,6 +116,7 @@ class TestSymlink(object):
 
         assert ii.called
         assert not sl.called
+        assert self.infect._skipped == ['foo']
 
     @mock.patch.object(infect.Infect, '_is_installed')
     @mock.patch.object(infect.Infect, '_symlink')
@@ -124,6 +125,7 @@ class TestSymlink(object):
         self.infect.symlink('foo')
 
         assert ii.called
+        assert self.infect._skipped == []
         sl.assert_called_once_with(self.fileroot, self.filedest)
 
     @mock.patch.object(infect.Infect, '_is_installed')

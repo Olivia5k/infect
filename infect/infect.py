@@ -11,6 +11,7 @@ class Infect(object):
     def __init__(self, ns):
         self.ns = ns
         self.conf = {}
+        self._skipped = []
 
     def install(self):  # pragma: nocover
         pass
@@ -25,6 +26,7 @@ class Infect(object):
         for app in apps:
             # TODO thiderman: Allow argument like --all that overrides
             if not self._is_installed(app):
+                self._skipped.append(app)
                 continue
 
             appconf = self.conf['apps'][app]
