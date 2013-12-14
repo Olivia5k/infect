@@ -104,7 +104,10 @@ class TestSymlink(object):
             'apps': {
                 'foo': {
                     'files': [self.filename],
-                }
+                },
+                'bar': {
+                    'files': ['hehe.' + self.filename],
+                },
             }
         }
 
@@ -197,6 +200,28 @@ class TestSymlink(object):
         assert ii.called
         assert not bu.called
         sl.assert_called_once_with(self.fileroot, self.filedest)
+
+    @mock.patch.object(infect.Infect, '_is_installed')
+    @mock.patch.object(infect.Infect, '_symlink')
+    def test_install_multiple(self, sl, ii):
+        ii.return_value = True
+        self.infect.symlink('foo', 'bar')
+
+        assert ii.call_count == 2
+        assert self.infect._skipped == []
+        call = mock.call(self.fileroot, self.filedest)
+        sl.assert_has_calls(call)
+
+    @mock.patch.object(infect.Infect, '_is_installed')
+    @mock.patch.object(infect.Infect, '_symlink')
+    def test_install_multiple_one_missing(self, sl, ii):
+        ii.side_effect = [True, False, True]
+        self.infect.symlink('foo', 'doge', 'bar')
+
+        assert ii.call_count == 3
+        assert self.infect._skipped == ['doge']
+        call = mock.call(self.fileroot, self.filedest)
+        sl.assert_has_calls(call)
 
 
 class TestIsInstalled(object):
